@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: deallimage
-          image: docker.io/gerry97/deall:v1
+          image: docker.io/gerry97/deall:latest
           ports:
             - containerPort: 8800
 ---
