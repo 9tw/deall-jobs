@@ -1,5 +1,5 @@
 <div align="center">
-<h1>Deall Jobs Technical Test</h1>
+<h2>Deall Jobs Technical Test</h2>
   <p align="center">This repo is for Deall Jobs Technical Test and here are the admin credential for the program.</p>
 </div>
 
