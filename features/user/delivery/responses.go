@@ -16,7 +16,6 @@ type RegistResponses struct {
 type EditResponse struct {
 	Fullname string `json:"fullname"`
 	Email    string `json:"email"`
-	Images   string `json:"images"`
 }
 
 type UserResponse struct {

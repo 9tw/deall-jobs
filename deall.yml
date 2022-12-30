@@ -1,0 +1,411 @@
+openapi: 3.0.0
+info:
+  description: OpenAPI for Deall Technical Test API
+  version: "1.0.0"
+  title: Deall Technical Test API
+  termsOfService: 'http://swagger.io/terms/'
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+servers:
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/Deall/openapi-deall/1.0.0
+  - url: http://mydomain.com:8000/{environment}
+    variables:
+      environment:
+        description: Environment End Point
+        default: users
+        enum:
+          - Login
+          - User
+          - Admin
+tags:
+  - name: Login
+    description: User log in to program
+  - name: User
+    description: Feature for user
+  - name: Admin
+    description: Feature for admin
+paths:
+  /admin/add:
+    summary: Operation add user
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Admin
+      summary: Add new user
+      description: Create new user to Database
+      requestBody:
+        description: Add new user
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+            example:
+              fullname: User One
+              email: user.test@mail.com
+              password: user1123
+      responses:
+        '201':
+          $ref: '#/components/responses/SuccessCreateUser'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /login:
+    summary: Operation login user
+    post:
+      tags:
+        - Login
+      summary: Login user
+      description: Get user from Database
+      requestBody:
+        description: Login section
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUser'
+            example:
+              username: admin.super@deall.com
+              password: deall123
+      responses:
+        '202':
+          $ref: '#/components/responses/SuccessLoginUser'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /profile:
+    summary: Operation get profile user
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - User
+      summary: Get my profile
+      description: Get my profile from Database
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessGetMyUser'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /admin/all:
+    summary: Operation get all users
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Admin
+      summary: Get all users
+      description: Get all users from Database
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessGetUsers'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /admin/update/{id}:
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Admin
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Input user id
+          schema:
+            type: integer
+          example:
+            id: 1
+      summary: Update profile user
+      description: Update profile user from Database
+      requestBody:
+        description: Update data user
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UpdateProfile'
+            example:
+              fullname: User Two
+              email: user.test.test@mail.com
+              password: user1123
+      responses:
+        '202':
+          $ref: '#/components/responses/SuccessUpdateUser'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /admin/delete/{id}:        
+    delete:
+      security:
+        - bearerAuth: []      
+      tags:
+        - Admin
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Input user id
+          schema:
+            type: integer
+          example:
+            id: 1
+      summary: Deactivate user
+      description: Deactivate user from Database
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessDeleteUser'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+components:
+  securitySchemes:
+    bearerAuth:
+      description: JWT Authentication
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    SuccessResult:
+      type: object
+      properties:
+        message: 
+          type: string
+        data:
+          type: object   
+    UpdateProfile:
+      type: object
+      properties:
+        fullname:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+    CreateUser:
+      type: object
+      properties:
+        fullname:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+    LoginUser:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    SuccessGetMyUser:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: object
+      example:
+        message: Success get my profile
+        data:
+          id: 1
+          fullname: Admin Deall
+          email: admin.super@deall.com
+          role: 1
+    SuccessGetUsers:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: object
+      example:
+        message: Success get all user
+        data:
+          - id: 5
+            fullname: User One
+            email: user.test1@mail.com
+            role: user1123
+          - id: 6
+            fullname: User Two
+            email: user.test2@mail.com
+            role: user2123
+          - id: 7
+            fullname: User Three
+            email: user.test3@mail.com
+            role: user3123
+    SuccessUpdateUser:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: object
+      example:
+        message: Success update user
+        data:
+          fullname: User Two
+          email: user.test.test@mail.com
+    SuccessDeleteUser:
+      type: string
+      properties:
+        message:
+          type: string
+      example:
+        message: Success deactivate user
+    SuccessCreateUser:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: object
+      example:
+        message: Success create new user
+        data:
+          fullname: User One
+          email: user.test@mail.com
+    SuccessLoginUser:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: object
+      example:
+        message: Success to login
+        data:
+          fullname: Admin Deall
+          role: 1
+          token: jwt_token
+    Error400:
+      type: object
+      properties:
+        message:
+          type: string
+      example:
+        message: Bad Request
+    Error401:
+      type: object
+      properties:
+        message:
+          type: string
+      example:
+        message: User does not have authorize
+    Error403:
+      type: object
+      properties:
+        message:
+          type: string
+      example:
+        message: Forbidden
+    Error404:
+      type: object
+      properties:
+        message:
+          type: string
+      example:
+        message: Data not found
+    Error500:
+      type: object
+      properties:
+        message:
+          type: string
+      example:
+        message: Internal server error
+  responses:
+    SuccessGetMyUser:
+      description: Success get my profile
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessGetMyUser'
+    SuccessGetUsers:
+      description: Success get data all users
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessGetUsers'
+    SuccessUpdateUser:
+      description: Success updating user
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessUpdateUser'
+    SuccessDeleteUser:
+      description: Success deactivating user
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessDeleteUser'
+    SuccessCreateUser:
+      description: Success creating new user
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessCreateUser'
+    SuccessLoginUser:
+      description: Success login user
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessLoginUser'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    Unauthorized:
+      description: User does not have authorize
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error401'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error403'
+    NotFound:
+      description: The spesified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error404'
+    ServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error500'
