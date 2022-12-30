@@ -1,8 +1,6 @@
 <div align="center">
-<h1>Technical Test for Deall Jobs</h1>
-  <!-- <p align="center">
-    <a href="https://app.swaggerhub.com/apis-docs/9tw/Bengcall/1.0.0#/"><strong>| Open API Documentation |</strong></a><br><br>
-  </p> -->
+<h1>Deall Jobs Technical Test</h1>
+  <p align="center">This repo is for Deall Jobs Technical Test and here are the admin credential for the program.</p>
 </div>
 
 ## 📑 Admin Credential
